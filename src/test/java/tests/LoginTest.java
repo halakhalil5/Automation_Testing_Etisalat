@@ -5,13 +5,11 @@ import com.aventstack.extentreports.ExtentTest;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.openqa.selenium.By;
 import org.testng.Assert;
-import org.testng.ITestContext;
 import org.testng.annotations.*;
 
 import pages.*;
-import utils.ExtentManager;
-import utils.ExtentTestManager;
 import utils.JsonDataReader;
+import utils.JsonReaderAllFields;
 import utils.TestListener;
 
 
@@ -71,16 +69,24 @@ public class LoginTest extends BaseTest {
     }
 
 
-    @Test(priority=3)
+    @Test(priority = 3)
     public void LoginSignout() throws Exception {
-        JsonNode testData = JsonDataReader.readJson("Data.json");
+        // Load the full JSON
+        JsonNode testData = JsonReaderAllFields.readJson("Data.json");
+
+        // Optional: Print everything (for debugging)
+        JsonReaderAllFields.printJsonRecursive(testData, "");
+
+        // Get the "login" array
         JsonNode logins = testData.get("login");
 
         for (JsonNode login : logins) {
             String username = login.get("username").asText();
             String password = login.get("password").asText();
+
             try {
                 LoginPage loginPage = new LoginPage(driver);
+
                 loginPage.enterUsername(username)
                         .clickOnProceedButton()
                         .enterPassword(password)
@@ -90,19 +96,20 @@ public class LoginTest extends BaseTest {
                         .clicksettings()
                         .SignOut();
 
-                TestListener.getTest().info("Login completed for user: " + username);
+                TestListener.getTest().info("✅ Login completed for user: " + username);
 
             } catch (Exception e) {
-                TestListener.getTest().fail("Test failed due to exception: " + e.getMessage());
-                Assert.fail("Exception during login test", e);
+                TestListener.getTest().fail("❌ Test failed for user: " + username + " | Exception: " + e.getMessage());
+                Assert.fail("Exception during login test for user: " + username, e);
             }
         }
     }
 
 
+
     @Test( priority=4)
     public void verifyLogin() throws Exception {
-        JsonNode testData = JsonDataReader.readJson("Data.json");
+        JsonNode testData = JsonDataReader.readJson("src/test/resoures/Data.json");
         JsonNode logins = testData.get("login");
 
         for (JsonNode login : logins) {

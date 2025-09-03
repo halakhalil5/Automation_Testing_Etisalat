@@ -9,23 +9,19 @@ import java.util.Map;
 
 public class JsonReaderAllFields {
 
-    public static void main(String[] args) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
-        // Load JSON file from resources
-        InputStream is = JsonReaderAllFields.class.getClassLoader().getResourceAsStream("Data.json");
+    // Load JSON file from resources
+    public static JsonNode readJson(String fileName) throws Exception {
+        InputStream is = JsonReaderAllFields.class.getClassLoader().getResourceAsStream(fileName);
         if (is == null) {
-            throw new RuntimeException("❌ JSON file not found!");
+            throw new RuntimeException("❌ JSON file not found: " + fileName);
         }
-
-        JsonNode root = mapper.readTree(is);
-
-        // Print the entire JSON recursively
-        printJsonRecursive(root, "");
+        return mapper.readTree(is);
     }
 
-    // Recursive method to print all fields dynamically
-    private static void printJsonRecursive(JsonNode node, String indent) {
+    // Print all JSON fields recursively (for debugging)
+    public static void printJsonRecursive(JsonNode node, String indent) {
         if (node.isObject()) {
             Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
             while (fields.hasNext()) {
