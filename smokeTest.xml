@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name=" Hala Regression Test Suite">
+    <listeners>
+        <listener class-name="utils.TestListener"/>
+    </listeners>
+
+    <test name="testRegression">
+
+        <classes>
+
+            <class name="tests.LoginTest" />
+
+            <!--
+
+       <class name="com.etisalat.tests.Android.Android_Emerald_Parent_Test_scenario" />
+         <class name="com.etisalat.tests.Android.Android_Harley_Prepaid_Test_scenario" />
+              <class name="com.etisalat.tests.Android.Android_Hekaya_Prepaid_Test_scenario" />
+                <class name="com.etisalat.tests.Android.Android_Pixel_PrePaid_TestScenario" />
+
+
+
+            <class name="com.etisalat.tests.Android.Ar_Android_Emerald_Parent_Test_scenario" />
+          <class name="com.etisalat.tests.Android.Ar_Android_Harley_Prepaid_Test_scenario" />
+        <class name="com.etisalat.tests.Android.Ar_Android_Hekaya_Prepaid_Test_scenario" />
+      <class name="com.etisalat.tests.Android.Ar_Android_PixelTestScenario" />
+
+                   <class name="com.etisalat.tests.Android.Demo" />
+
+
+                                 "IOS classes"
+
+       <class name="com.etisalat.tests.IOS.IOS_Emerald_Parent_Test_scenario" />
+        <class name="com.etisalat.tests.IOS.IOS_Hekaya_Test_Scenarios" />
+         <class name="com.etisalat.tests.IOS.IOS_Harley_Prepaid_Test_scenario" />
+
+
+           <class name="com.etisalat.tests.IOS.Ar_IOS_Emerald_Parent_Test_scenario" />
+          <class name="com.etisalat.tests.IOS.Ar_IOS_Hekaya_Test_Scenarios" />
+         <class name="com.etisalat.tests.IOS.Ar_IOS_Harley_Prepaid_Test_scenario" />
+ -->
+        </classes>
+
+    </test>
+</suite>
