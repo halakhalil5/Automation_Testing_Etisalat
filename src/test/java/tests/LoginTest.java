@@ -22,14 +22,6 @@ public class LoginTest extends BaseTest {
     private ExtentTest test;
 
 
-
-
-//    @BeforeClass
-//    public void startReport() {
-//        extent = ExtentManager.getInstance();
-//        test = extent.createTest("Login Test");
-//    }
-
     @DataProvider(name = "loginData")
     public Object[][] getLoginData() throws Exception {
         JsonNode testData = JsonDataReader.readJson("src/test/java/resoures/Data.json");
@@ -43,79 +35,6 @@ public class LoginTest extends BaseTest {
         }
         return data;
     }
-
-
-//    @Test(dataProvider = "loginData")
-//    public void verifyLogin(String username, String password) {
-//        LoginPage loginPage = new LoginPage(driver);
-//
-//        loginPage.enterUsername(username);
-//
-//        PasswordPage passwordPage = loginPage.clickOnProceedButton();
-//        loginPage.handlePopup(
-//                By.id("com.android.packageinstaller:id/desc_container"),
-//                By.id("com.android.packageinstaller:id/permission_allow_button")
-//        );
-//
-//        passwordPage.enterPassword(password);
-//
-//        HomePage homePage = passwordPage.clickLogin();
-//        homePage.handlePopup(By.id("com.android.packageinstaller:id/desc_container"), By.id("com.etisalat:id/dailyGiftsClose"));
-//        Assert.assertTrue(homePage.isHomePageDisplayed(), "HomePage was not displayed!");
-//    }
-
-//    @Test(dataProvider = "loginData")
-//    public void verifyLoginem(String username, String password) {
-//
-//        try {
-//            LoginPage loginPage = new LoginPage(driver);
-//
-//            // Step 1: Enter username
-//            loginPage.enterUsername(username);
-//            ExtentTestManager.getTest().pass("Entered username: " + username);
-//
-//            // Step 2: Click on Proceed button
-//            PasswordPage passwordPage = loginPage.clickOnProceedButton();
-//            ExtentTestManager.getTest().pass("Clicked Proceed button");
-//
-//            // Step 3: Handle permission popup if it appears
-//            loginPage.handlePopup(
-//                    By.id("com.android.permissioncontroller:id/grant_dialog"),
-//                    By.id("com.android.permissioncontroller:id/permission_allow_button"));
-//            ExtentTestManager.getTest().info("Handled permissions popup");
-//
-//            // Step 4: Enter password
-//            passwordPage.enterPassword(password);
-//            ExtentTestManager.getTest().info("Entered password");
-//
-//            // Step 5: Click login
-//            HomePage homePage = passwordPage.clickLogin();
-//            ExtentTestManager.getTest().info("Clicked Login button");
-//
-//            // Step 6: Handle daily gifts popup if it appears
-//            homePage.handlePopup(
-//                    By.id("com.etisalat:id/dailyGiftsClose"),
-//                    By.id("com.etisalat:id/dailyGiftsClose"));
-//            ExtentTestManager.getTest().info("Handled daily gifts popup");
-//
-//            // Step 7: Verify homepage
-//            if (homePage.isHomePageDisplayed()) {
-//                ExtentTestManager.getTest().pass("HomePage displayed successfully");
-//            } else {
-//                ExtentTestManager.getTest().fail("HomePage NOT displayed");
-//                Assert.fail("HomePage not displayed"); // stops execution
-//            }
-//
-//        } catch (Exception e) {
-//            ExtentTestManager.getTest().fail("Test failed due to exception: " + e.getMessage());
-//            Assert.fail("Exception during login test", e);
-//        } finally {
-//            ExtentTestManager.endTest(); // flush the report
-//        }
-//    }
-
-
-
 
 
     @Test(priority=1)
@@ -151,46 +70,60 @@ public class LoginTest extends BaseTest {
 
     }
 
-    @Test(dataProvider = "loginData", priority=3)
-    public void LoginSignout(String username, String password) {
-        try {
-            LoginPage loginPage = new LoginPage(driver);
-            loginPage.enterUsername(username)
-                    .clickOnProceedButton()
-                    .enterPassword(password)
-                    .clickLogin()
-                    .waitUntilPageLoads()
-                    .clickMoreButton()
-                    .clicksettings()
-                    .SignOut();
 
-            // if you want custom logs:
-            TestListener.getTest().info("Login completed for user: " + username);
+    @Test(priority=3)
+    public void LoginSignout() throws Exception {
+        JsonNode testData = JsonDataReader.readJson("Data.json");
+        JsonNode logins = testData.get("login");
 
-        } catch (Exception e) {
-            TestListener.getTest().fail("Test failed due to exception: " + e.getMessage());
-            Assert.fail("Exception during login test", e);
+        for (JsonNode login : logins) {
+            String username = login.get("username").asText();
+            String password = login.get("password").asText();
+            try {
+                LoginPage loginPage = new LoginPage(driver);
+                loginPage.enterUsername(username)
+                        .clickOnProceedButton()
+                        .enterPassword(password)
+                        .clickLogin()
+                        .waitUntilPageLoads()
+                        .clickMoreButton()
+                        .clicksettings()
+                        .SignOut();
+
+                TestListener.getTest().info("Login completed for user: " + username);
+
+            } catch (Exception e) {
+                TestListener.getTest().fail("Test failed due to exception: " + e.getMessage());
+                Assert.fail("Exception during login test", e);
+            }
         }
     }
 
 
-    @Test(dataProvider = "loginData", priority=4)
-    public void verifyLogin(String username, String password) {
-        LoginPage loginPage = new LoginPage(driver);
+    @Test( priority=4)
+    public void verifyLogin() throws Exception {
+        JsonNode testData = JsonDataReader.readJson("Data.json");
+        JsonNode logins = testData.get("login");
 
-        loginPage.enterUsername(username);
+        for (JsonNode login : logins) {
+            String username = login.get("username").asText();
+            String password = login.get("password").asText();
+            LoginPage loginPage = new LoginPage(driver);
 
-        PasswordPage passwordPage = loginPage.clickOnProceedButton();
-        loginPage.handlePopup(
-                By.id("com.android.packageinstaller:id/desc_container"),
-                By.id("com.android.packageinstaller:id/permission_allow_button")
-        );
+            loginPage.enterUsername(username);
 
-        passwordPage.enterPassword(password);
+            PasswordPage passwordPage = loginPage.clickOnProceedButton();
+            loginPage.handlePopup(
+                    By.id("com.android.packageinstaller:id/desc_container"),
+                    By.id("com.android.packageinstaller:id/permission_allow_button")
+            );
 
-        HomePage homePage = passwordPage.clickLogin();
-        homePage.handlePopup(By.id("com.android.packageinstaller:id/desc_container"), By.id("com.etisalat:id/dailyGiftsClose"));
-        Assert.assertTrue(homePage.isHomePageDisplayed(), "HomePage was not displayed!");
+            passwordPage.enterPassword(password);
+
+            HomePage homePage = passwordPage.clickLogin();
+            homePage.handlePopup(By.id("com.android.packageinstaller:id/desc_container"), By.id("com.etisalat:id/dailyGiftsClose"));
+            Assert.assertTrue(homePage.isHomePageDisplayed(), "HomePage was not displayed!");
+        }
     }
 
 
@@ -231,14 +164,6 @@ public class LoginTest extends BaseTest {
     }
 
 
-
-
-//    @AfterClass
-//    public void endReport() {
-//        if (extent != null) {
-//            extent.flush();
-//        }
-//    }
 }
 
 
